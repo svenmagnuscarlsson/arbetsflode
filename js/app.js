@@ -266,9 +266,13 @@ const App = (function () {
             if (result.success) {
                 UI.showToast('Skickat!', 'Din feedback har skickats. Tack för ditt bidrag!', 'success');
 
-                // Valfritt: Rensa lokal data efter lyckad sändning
-                // await FeedbackManager.clearAll();
-                // await Storage.saveProgress(0);
+                // Automatisk omdirigering och rensning efter 2 sekunder
+                setTimeout(async () => {
+                    await Storage.clearAll();
+                    await FeedbackManager.loadAll();
+                    user = null;
+                    StepManager.goToStep(0);
+                }, 2000);
             } else {
                 throw new Error(result.error);
             }
